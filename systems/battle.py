@@ -9,7 +9,7 @@ def start_battle(player, enemy):
 
         print("\n행동을 선택하세요")
         print("1. 공격")
-        print("2. 스킬 사용(미구현)")
+        print("2. 스킬 사용")
         print("3. 아이템 사용(미구현)")
         print("4. 도망(미구현)")
         
@@ -18,7 +18,20 @@ def start_battle(player, enemy):
         if choice == "1":
             player.attack_target(enemy)
         elif choice == "2":
-            print("스킬 시스템은 아직 구현되지 않았습니다")
+            if not player.skills:
+                print("사용할 스킬을 선택하세요")
+                continue
+            print("사용할 스킬을 선택하세요:")
+            for idx, skill in enumerate(player.skills):
+                print(f"{idx + 1}. {skill.name} (MP: {skill.mp_cost}) - {skill.description}")
+                skill_choice = input("> ")
+                try:
+                    skill_index = int(skill_choice)
+                    selected_skill = player.skills[skill_index]
+                    selected_skill.use(player, enemy)
+                except (ValueError, IndexError):
+                    print("잘못된 입력이오. 기본공격을 진행 히겠소")
+                    player.attack_target(enemy)
         elif choice == "3":
             print("아이템 시스템은 아직 구현되지 않았습니다")
         elif choice == "4":
