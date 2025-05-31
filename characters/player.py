@@ -42,9 +42,9 @@ class Player(BaseCharacter):
 
         if job == "무사":
             self.skills = warrior_skills
-        if job == "도사":
+        elif job == "도사":
             self.skills = mage_skills
-        if job == "유랑객":
+        elif job == "유랑객":
             self.skills = rogue_skills
         else:
             raise ValueError("없는 직업 입니다")
