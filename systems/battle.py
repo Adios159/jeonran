@@ -1,3 +1,5 @@
+from skills.base_skill import Skill
+
 def start_battle(player, enemy):
     print("\n--- 전투 시작 ---")
     print(f"{enemy.name}이(가) 나타났다")
@@ -17,27 +19,33 @@ def start_battle(player, enemy):
 
         if choice == "1":
             player.attack_target(enemy)
+
         elif choice == "2":
-            if not player.skills:
-                print("사용할 스킬을 선택하세요")
-                continue
-            print("사용할 스킬을 선택하세요:")
-            for idx, skill in enumerate(player.skills):
-                print(f"{idx + 1}. {skill.name} (MP: {skill.mp_cost}) - {skill.description}")
-                skill_choice = input("> ")
-                try:
-                    skill_index = int(skill_choice)
-                    selected_skill = player.skills[skill_index]
-                    selected_skill.use(player, enemy)
-                except (ValueError, IndexError):
-                    print("잘못된 입력이오. 기본공격을 진행 히겠소")
-                    player.attack_target(enemy)
+                skills = player.skills  # ← 이 줄이 중요
+                while True:
+                    print("사용할 스킬을 선택하세요:")
+                    for i, skill in enumerate(skills):
+                        print(f"{i+1}. {skill.name} (MP: {skill.mp_cost}) - {skill.description}")
+                    skill_choice = input("> ")
+        
+                    try:
+                        skill_index = int(skill_choice) - 1
+                        if 0 <= skill_index < len(skills):
+                            selected_skill = skills[skill_index]
+                            selected_skill.use(player, enemy)
+                            break
+                        else:
+                            print("올바르지 않은 번호입니다.")
+                    except ValueError:
+                        print("숫자를 입력해 주세요.")
+
+
         elif choice == "3":
             print("아이템 시스템은 아직 구현되지 않았습니다")
         elif choice == "4":
             print("도망 시스템은 아직 구현되지 않았습니다")
         else:
-            print("잘못된 입력 입니다. 기본 공격을 진행합니다")
+            print("잘못된 입력입니다. 기본 공격을 진행합니다.")
             player.attack_target(enemy)
 
         if not enemy.is_alive():
@@ -45,12 +53,12 @@ def start_battle(player, enemy):
             print(f"경험치 {enemy.exp_reward} 획득!")
             player.exp += enemy.exp_reward
             return
-        
+
         print("\n[적 턴]")
         enemy.choose_action(player)
 
         player.end_turn()
         enemy.end_turn()
-    
+
     if not player.is_alive():
         print("\n당신은 패배하였습니다...")
