@@ -1,4 +1,7 @@
 from characters.base_character import BaseCharacter
+from skills.warrior_skills import warrior_skills
+from skills.mage_skills import mage_skills
+from skills.rogue_skills import rogue_skills
 
 class Player(BaseCharacter):
     def __init__(self, name, job):
@@ -34,3 +37,14 @@ class Player(BaseCharacter):
         self.exp = 0
         self.skills = skills
         self.mp = 30
+
+        self.skills = []
+
+        if job == "무사":
+            self.skills = warrior_skills
+        if job == "도사":
+            self.skills = mage_skills
+        if job == "유랑객":
+            self.skills = rogue_skills
+        else:
+            raise ValueError("없는 직업 입니다")
