@@ -20,8 +20,8 @@ rogue_skills = [
         effect_func = quick_stab,
         ),
     Skill(
-        name = "방패 가격",
-        description = "적을 방패로 가격하여 스텀 상태이상을 유발 할 수 있다",
+        name = "독 단검",
+        description = "독 상태이상을 유발 할 수 있다",
         mp_cost=4,
         effect_func=poison_dagger,
         status_effect="poison",

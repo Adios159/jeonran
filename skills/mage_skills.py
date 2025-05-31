@@ -22,8 +22,8 @@ mage_skills = [
         status_chance =0.3
         ),
     Skill(
-        name = "방패 가격",
-        description = "적을 방패로 가격하여 스텀 상태이상을 유발 할 수 있다",
+        name = "서리파동",
+        description = "빙결 상태이상을 줄 수 있는 마법",
         mp_cost=4,
         effect_func=frost_wave,
         status_effect="freeze",
