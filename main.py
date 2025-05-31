@@ -13,7 +13,7 @@ def main():
     if job_choice == "1":
         job = "무사"
     elif job_choice == "2":
-        job = "마법사"
+        job = "도사"
     elif job_choice == "3":
         job = "유랑객"
     else:
