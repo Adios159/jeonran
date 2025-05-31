@@ -12,7 +12,7 @@ def frost_wave(user, target):
     target.current_hp -= damage
     print(f"{target.name}에게 냉기를 날려 {damage}의 피해를 입혔다")
 
-warrior_skills = [
+mage_skills = [
     Skill(
         name = "화염구",
         description = "화상 상태이상을 줄 수 있는 마법",
