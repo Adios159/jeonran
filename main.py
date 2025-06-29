@@ -1,6 +1,8 @@
 from characters.player import Player
 from characters.enemy import Enemy
 from systems.battle import start_battle
+from systems.monsters import monster_spawner
+from systems.region import region_manager
 
 def main():
     print("🌕 전란 그리고 요괴 🌕")
@@ -26,15 +28,13 @@ def main():
     print("모험을 시작하기 전 기본 아이템을 지급해드리겠습니다.")
     player.give_starting_items()
 
-    enemy = Enemy(
-        name = "호롱불",
-        max_hp=50,
-        attack=10,
-        defence=3,
-        speed=5,
-        exp_reward=30,
-        status_chance={"burn": 0.4}
-    )
+    # 현재 지역에서 랜덤 몬스터 소환
+    current_region = region_manager.current_region
+    print(f"\n현재 위치: {current_region}")
+    print(region_manager.get_region_info())
+    
+    enemy = monster_spawner.get_random_monster(current_region)
+    print(f"\n{current_region}에서 요괴의 기운이 느껴진다...")
 
     start_battle(player, enemy)
 

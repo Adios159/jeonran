@@ -99,6 +99,39 @@ def start_battle(player, enemy):
         if not enemy.is_alive():
             print(f"{enemy.name}을(를) 쓰러뜨렸다")
             player.gain_exp(enemy.exp_reward)
+            
+            # 전투 후 행동 선택
+            print("\n전투에서 승리했습니다!")
+            print("1. 현재 지역에 머물기")
+            print("2. 다른 지역으로 이동")
+            
+            choice = input("선택> ")
+            
+            if choice == "2":
+                from systems.region import region_manager
+                destinations = region_manager.get_available_destinations()
+                
+                if destinations:
+                    print("\n이동 가능한 지역:")
+                    for i, dest in enumerate(destinations, 1):
+                        print(f"{i}. {dest}")
+                    print("0. 취소")
+                    
+                    try:
+                        dest_choice = int(input("이동할 지역> "))
+                        if dest_choice == 0:
+                            print("이동을 취소했습니다.")
+                        elif 1 <= dest_choice <= len(destinations):
+                            destination = destinations[dest_choice - 1]
+                            success, message = region_manager.travel_to(destination)
+                            print(f"\n{message}")
+                        else:
+                            print("잘못된 번호입니다.")
+                    except ValueError:
+                        print("숫자를 입력해주세요.")
+                else:
+                    print("이동 가능한 지역이 없습니다.")
+            
             return
 
         print("\n[적 턴]")

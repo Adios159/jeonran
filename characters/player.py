@@ -38,6 +38,7 @@ class Player(BaseCharacter):
         self.level = 1
         self.exp = 0
         self.mp = 30
+        self.current_location = "한양"  # 기본 시작 위치
 
         # 직업별 스킬 할당
         if job == "무사":
@@ -71,6 +72,7 @@ class Player(BaseCharacter):
     
     def gain_exp(self, amount):
         """경험치 획득 및 레벨업 처리"""
+        # 지역별 경험치 보너스 적용 (향후 구현)
         self.exp += amount
         print(f"경험치 {amount} 획득! (총 경험치: {self.exp})")
         
