@@ -1,0 +1,118 @@
+[
+  {
+    "id": "quest_001",
+    "title": "한양의 불빛",
+    "region": "한양",
+    "type": "kill",
+    "description": "밤마다 궁 근처를 맴도는 붉은 불빛이 도깨비불이라는 소문이 돌아요. 백성들이 불안에 떨고 있어요. 해결해주실 수 있을까요?",
+    "objectives": {
+      "target": "도깨비불",
+      "count": 3,
+      "current": 0
+    },
+    "rewards": {
+      "exp": 300,
+      "items": {
+        "대형 약초": 1
+      }
+    },
+    "requirements": {
+      "min_level": 1,
+      "completed_quests": []
+    },
+    "status": "available"
+  },
+  {
+    "id": "quest_002", 
+    "title": "의심스러운 약초상",
+    "region": "빛고을",
+    "type": "collect",
+    "description": "근래 들어 약초 값이 폭등했어요. 누군가 몰래 사재기를 하고 있는 게 분명해요. 주변에서 소형 약초를 좀 모아봐주시겠어요?",
+    "objectives": {
+      "target": "소형 약초",
+      "count": 5,
+      "current": 0
+    },
+    "rewards": {
+      "exp": 200,
+      "items": {
+        "마력 물약": 1
+      }
+    },
+    "requirements": {
+      "min_level": 3,
+      "completed_quests": []
+    },
+    "status": "available"
+  },
+  {
+    "id": "quest_003",
+    "title": "붉은 물속의 그림자", 
+    "region": "제물포",
+    "type": "kill",
+    "description": "부둣가에서 실종 사건이 잇따르고 있어요. 어부들 말로는 검은 그림자가 바다에서 솟구친다고 해요. 무서운 일이 일어나기 전에 조치를 취해주십시오.",
+    "objectives": {
+      "target": "검은물귀",
+      "count": 1,
+      "current": 0
+    },
+    "rewards": {
+      "exp": 500,
+      "items": {
+        "마력 물약": 2
+      }
+    },
+    "requirements": {
+      "min_level": 8,
+      "completed_quests": ["quest_001"]
+    },
+    "status": "available"
+  },
+  {
+    "id": "quest_004",
+    "title": "무덤의 수호자",
+    "region": "소머리골", 
+    "type": "kill",
+    "description": "무덤을 건드리는 자가 자꾸 사라집니다. 수호령이 깨어났다는 말도 있는데, 그 말이 사실이라면… 그 존재를 멈춰주세요.",
+    "objectives": {
+      "target": "묘혈수호령",
+      "count": 1,
+      "current": 0
+    },
+    "rewards": {
+      "exp": 600,
+      "items": {
+        "대형 약초": 1,
+        "귀한 뼛조각": 1
+      }
+    },
+    "requirements": {
+      "min_level": 12,
+      "completed_quests": ["quest_002", "quest_003"]
+    },
+    "status": "available"
+  },
+  {
+    "id": "quest_005",
+    "title": "안개를 지나",
+    "region": "한밭",
+    "type": "travel",
+    "description": "한밭의 장정들이 소머리골로 향했다가 돌아오지 못했어요. 누가 거길 무사히 통과할 수 있는지 시험해보려 합니다. 소머리골까지 살아서 도달해보세요.",
+    "objectives": {
+      "target": "소머리골",
+      "count": 1,
+      "current": 0
+    },
+    "rewards": {
+      "exp": 400,
+      "items": {
+        "마력 물약": 1
+      }
+    },
+    "requirements": {
+      "min_level": 5,
+      "completed_quests": ["quest_001"]
+    },
+    "status": "available"
+  }
+] 
