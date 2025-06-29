@@ -11,11 +11,13 @@ def display_game_menu():
     print("="*50)
     print("1. 지역 탐험 (요괴와 전투)")
     print("2. 지역 이동")
-    print("3. 현재 상태 확인")
-    print("4. 지역 정보 보기")
-    print("5. 요괴 도감")
-    print("6. 휴식 (HP/MP 회복)")
-    print("7. 게임 종료")
+    print("3. 사람들과 대화")
+    print("4. 장비 관리 🆕")
+    print("5. 현재 상태 확인")
+    print("6. 지역 정보 보기")
+    print("7. 요괴 도감")
+    print("8. 휴식 (HP/MP 회복)")
+    print("9. 게임 종료")
     print("="*50)
 
 def rest_at_location(player):
@@ -137,6 +139,80 @@ def travel_menu(player):
     except ValueError:
         print("숫자를 입력해주세요.")
 
+def equipment_menu(player):
+    """장비 관리 메뉴"""
+    while True:
+        print("\n⚔️ **장비 관리**")
+        print("=" * 30)
+        print("1. 장착 중인 장비 확인")
+        print("2. 무기 도감 보기")
+        print("3. 인벤토리 확인")
+        print("4. 무기 장착/해제")
+        print("5. 무기 검색")
+        print("0. 돌아가기")
+        
+        choice = input("\n선택> ").strip()
+        
+        if choice == "1":
+            player.show_equipment_status()
+        
+        elif choice == "2":
+            player.weapon_system.show_weapon_catalog(player.job)
+        
+        elif choice == "3":
+            player.inventory.show_detailed_inventory(player.weapon_system)
+        
+        elif choice == "4":
+            weapon_equip_menu(player)
+        
+        elif choice == "5":
+            keyword = input("검색할 키워드를 입력하세요: ").strip()
+            if keyword:
+                player.search_weapons(keyword)
+            else:
+                player.search_weapons()  # 전체 사용 가능 무기 표시
+        
+        elif choice == "0":
+            break
+        
+        else:
+            print("❌ 잘못된 선택입니다.")
+
+def weapon_equip_menu(player):
+    """무기 장착/해제 메뉴"""
+    print("\n⚔️ **무기 장착/해제**")
+    print("1. 무기 해제")
+    print("2. 무기 장착 (테스트용)")
+    print("0. 돌아가기")
+    
+    choice = input("\n선택> ").strip()
+    
+    if choice == "1":
+        player.unequip_weapon()
+    
+    elif choice == "2":
+        # 테스트용: 무기 시스템에서 무기를 선택하여 장착
+        usable_weapons = player.weapon_system.get_usable_weapons(player.job)
+        if not usable_weapons:
+            print("❌ 사용할 수 있는 무기가 없습니다.")
+            return
+        
+        print("\n사용 가능한 무기:")
+        for i, weapon in enumerate(usable_weapons, 1):
+            print(f"{i}. {weapon.get_rarity_color()} {weapon.name} (공격력: {weapon.attack})")
+        
+        try:
+            weapon_choice = int(input("\n장착할 무기 번호 (0=취소): "))
+            if weapon_choice == 0:
+                return
+            elif 1 <= weapon_choice <= len(usable_weapons):
+                selected_weapon = usable_weapons[weapon_choice - 1]
+                player.equip_weapon(selected_weapon)
+            else:
+                print("❌ 잘못된 번호입니다.")
+        except ValueError:
+            print("❌ 숫자를 입력해주세요.")
+
 def show_player_status(player):
     """플레이어 상태 출력"""
     max_mp = 30 + 5 * (player.level - 1)
@@ -147,15 +223,27 @@ def show_player_status(player):
     print(f"마력: {player.mp}/{max_mp}")
     print(f"공격력: {player.attack} | 방어력: {player.defence} | 속도: {player.speed}")
     
+    # 장착 무기 정보
+    if player.equipped_weapon:
+        print(f"장착 무기: {player.equipped_weapon.name} (공격력: {player.equipped_weapon.get_effective_attack(player.job)})")
+    else:
+        print("장착 무기: 없음")
+    
     # 상태이상 확인
     if player.status_effects:
         print("상태이상:", ", ".join([f"{status}({turns}턴)" for status, turns in player.status_effects.items()]))
     
     # 인벤토리 확인
-    if player.inventory.items:
-        print("\n=== 인벤토리 ===")
-        for item_name, quantity in player.inventory.items.items():
-            print(f"- {item_name} × {quantity}")
+    if player.inventory.items or player.inventory.weapons:
+        print("\n=== 인벤토리 간단 보기 ===")
+        if player.inventory.items:
+            for item_name, quantity in player.inventory.items.items():
+                print(f"- {item_name} × {quantity}")
+        if player.inventory.weapons:
+            print(f"- 무기 {len(player.inventory.weapons)}개")
+        
+        used, total = player.inventory.get_used_capacity(), player.inventory.max_capacity
+        print(f"용량: {used}/{total}칸")
     else:
         print("\n인벤토리가 비어있습니다.")
 
@@ -180,23 +268,29 @@ def main_game_loop(player):
         elif choice == "2":  # 지역 이동
             travel_menu(player)
         
-        elif choice == "3":  # 현재 상태 확인
+        elif choice == "3":  # 사람들과 대화
+            region_manager.interact_with_npcs()
+        
+        elif choice == "4":  # 장비 관리 🆕
+            equipment_menu(player)
+        
+        elif choice == "5":  # 현재 상태 확인
             show_player_status(player)
         
-        elif choice == "4":  # 지역 정보 보기
+        elif choice == "6":  # 지역 정보 보기
             print(f"\n{region_manager.get_region_info()}")
             
             # 추가로 이 지역 요괴 정보도 표시
             monster_info = monster_spawner.get_region_monster_info(region_manager.current_region)
             print(f"\n{monster_info}")
         
-        elif choice == "5":  # 요괴 도감
+        elif choice == "7":  # 요괴 도감
             monster_spawner.list_all_monsters()
         
-        elif choice == "6":  # 휴식
+        elif choice == "8":  # 휴식
             rest_at_location(player)
         
-        elif choice == "7":  # 게임 종료
+        elif choice == "9":  # 게임 종료
             print("\n게임을 종료합니다. 안녕히 가세요!")
             break
         

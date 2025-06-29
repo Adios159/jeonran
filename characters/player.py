@@ -4,6 +4,8 @@ from skills.mage_skills import mage_skills
 from skills.rogue_skills import rogue_skills
 from systems.inventory import Inventory
 from systems.item import basic_items
+from systems.weapon_system import WeaponSystem, Weapon
+from typing import Optional
 
 class Player(BaseCharacter):
     def __init__(self, name, job):
@@ -52,6 +54,11 @@ class Player(BaseCharacter):
         
         # 인벤토리 초기화
         self.inventory = Inventory()
+        
+        # 무기 시스템 초기화
+        self.weapon_system = WeaponSystem()
+        self.equipped_weapon = None  # 현재 장착한 무기
+        self.base_attack = attack    # 기본 공격력 저장 (무기 없을 때)
     
     def give_starting_items(self):
         """시작 아이템 지급"""
@@ -117,3 +124,111 @@ class Player(BaseCharacter):
             self.inventory.remove_item(item_name, 1)
             return True
         return False
+    
+    def equip_weapon(self, weapon: Weapon) -> bool:
+        """무기를 장착합니다."""
+        # 직업 제한 확인
+        if not weapon.can_be_used_by(self.job):
+            print(f"❌ {self.job}은(는) {weapon.name}을(를) 사용할 수 없습니다.")
+            return False
+        
+        # 기존 무기 해제
+        if self.equipped_weapon:
+            print(f"🔄 {self.equipped_weapon.name}을(를) 해제하고 {weapon.name}을(를) 장착합니다.")
+        else:
+            print(f"⚔️ {weapon.name}을(를) 장착했습니다!")
+        
+        self.equipped_weapon = weapon
+        self._update_attack()
+        return True
+    
+    def unequip_weapon(self):
+        """무기를 해제합니다."""
+        if not self.equipped_weapon:
+            print("❌ 장착된 무기가 없습니다.")
+            return False
+        
+        print(f"🔄 {self.equipped_weapon.name}을(를) 해제했습니다.")
+        self.equipped_weapon = None
+        self._update_attack()
+        return True
+    
+    def _update_attack(self):
+        """무기에 따른 공격력을 업데이트합니다."""
+        if self.equipped_weapon:
+            try:
+                weapon_attack = self.equipped_weapon.get_effective_attack(self.job)
+                self.attack = self.base_attack + weapon_attack
+            except ValueError as e:
+                print(f"⚠️ 무기 장착 오류: {e}")
+                self.attack = self.base_attack
+        else:
+            self.attack = self.base_attack
+    
+    def get_weapon_info(self) -> str:
+        """현재 장착된 무기 정보를 반환합니다."""
+        if not self.equipped_weapon:
+            return "❌ 장착된 무기가 없습니다."
+        
+        weapon = self.equipped_weapon
+        try:
+            effective_attack = weapon.get_effective_attack(self.job)
+            info = f"⚔️ **장착 중**: {weapon.name}\n"
+            info += f"   🏷️ 타입: {weapon.type}\n"
+            info += f"   ⚡ 기본 공격력: {weapon.attack}\n"
+            
+            if effective_attack != weapon.attack:
+                info += f"   📊 효과적 공격력: {effective_attack} ({self.job} 보정)\n"
+            
+            if weapon.special_effect:
+                info += f"   ✨ 특수 효과: {weapon.special_effect}\n"
+            
+            info += f"   💰 가치: {weapon.price}전"
+            return info
+            
+        except ValueError as e:
+            return f"❌ 무기 오류: {e}"
+    
+    def show_equipment_status(self):
+        """장비 상태를 표시합니다."""
+        print("\n⚔️ **장비 상태**")
+        print("=" * 30)
+        print(f"🧑 캐릭터: {self.name} ({self.job})")
+        print(f"💪 기본 공격력: {self.base_attack}")
+        print(f"⚔️ 현재 총 공격력: {self.attack}")
+        print()
+        print(self.get_weapon_info())
+    
+    def search_weapons(self, keyword: Optional[str] = None):
+        """무기를 검색하고 표시합니다."""
+        if keyword:
+            weapons = self.weapon_system.search_weapons(keyword)
+            print(f"\n🔍 '{keyword}' 검색 결과:")
+        else:
+            weapons = self.weapon_system.get_usable_weapons(self.job)
+            print(f"\n⚔️ {self.job} 사용 가능한 무기:")
+        
+        if not weapons:
+            print("❌ 해당하는 무기가 없습니다.")
+            return
+        
+        print("=" * 40)
+        for i, weapon in enumerate(weapons, 1):
+            print(f"{i}. {weapon.get_info(self.job)}")
+            print("-" * 30)
+    
+    def buy_weapon(self, weapon_id: str, price: int) -> bool:
+        """무기를 구매합니다 (상점 시스템에서 호출)."""
+        weapon = self.weapon_system.get_weapon(weapon_id)
+        if not weapon:
+            print(f"❌ 무기를 찾을 수 없습니다: {weapon_id}")
+            return False
+        
+        # 직업 제한 확인
+        if not weapon.can_be_used_by(self.job):
+            print(f"❌ {self.job}은(는) {weapon.name}을(를) 사용할 수 없습니다.")
+            return False
+        
+        # 인벤토리에 무기 추가 (향후 구현)
+        print(f"✅ {weapon.name}을(를) 구매했습니다!")
+        return True

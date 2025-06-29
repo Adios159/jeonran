@@ -1,0 +1,169 @@
+[
+  {
+    "id": "namugeom",
+    "name": "나무 검",
+    "type": "한손검",
+    "attack": 8,
+    "rarity": "일반",
+    "description": "수련용으로 사용하는 나무로 만든 검",
+    "price": 100,
+    "usable_classes": ["무사", "유랑객"]
+  },
+  {
+    "id": "cheolgeom",
+    "name": "철검",
+    "type": "한손검",
+    "attack": 15,
+    "rarity": "일반",
+    "description": "단단한 철로 제련한 기본적인 검",
+    "price": 200,
+    "usable_classes": ["무사", "유랑객"]
+  },
+  {
+    "id": "joseon_do",
+    "name": "조선도",
+    "type": "한손검",
+    "attack": 22,
+    "rarity": "희귀",
+    "description": "조선의 명장이 제작한 예리한 검",
+    "price": 500,
+    "usable_classes": ["무사", "유랑객"]
+  },
+  {
+    "id": "dragon_sword",
+    "name": "용무늬 검",
+    "type": "한손검",
+    "attack": 30,
+    "rarity": "전설",
+    "description": "용의 힘이 깃든 신비로운 검",
+    "price": 1000,
+    "usable_classes": ["무사", "유랑객"]
+  },
+  {
+    "id": "hidden_blade",
+    "name": "두손검",
+    "type": "두손검",
+    "attack": 25,
+    "rarity": "희귀",
+    "description": "손목에 숨길 수 있는 암살자의 무기",
+    "price": 600,
+    "usable_classes": ["유랑객"]
+  },
+  {
+    "id": "poison_blade",
+    "name": "독 두손검",
+    "type": "두손검",
+    "attack": 28,
+    "rarity": "전설",
+    "description": "독이 발린 치명적인 암살 무기",
+    "price": 1200,
+    "usable_classes": ["유랑객"],
+    "special_effect": "독 상태이상 확률 +20%"
+  },
+  {
+    "id": "fire_talisman",
+    "name": "화염 부적",
+    "type": "부적",
+    "attack": 18,
+    "rarity": "일반",
+    "description": "화염의 힘이 깃든 도사의 부적",
+    "price": 250,
+    "usable_classes": ["도사"]
+  },
+  {
+    "id": "frost_talisman",
+    "name": "서리 부적",
+    "type": "부적",
+    "attack": 20,
+    "rarity": "희귀",
+    "description": "차가운 서리의 힘을 담은 부적",
+    "price": 550,
+    "usable_classes": ["도사"],
+    "special_effect": "빙결 상태이상 확률 +15%"
+  },
+  {
+    "id": "thunder_talisman",
+    "name": "뇌전 부적",
+    "type": "부적",
+    "attack": 35,
+    "rarity": "전설",
+    "description": "번개의 힘이 깃든 최고급 부적",
+    "price": 1500,
+    "usable_classes": ["도사"],
+    "special_effect": "기절 상태이상 확률 +25%"
+  },
+  {
+    "id": "geomungo",
+    "name": "거문고",
+    "type": "비파",
+    "attack": 12,
+    "rarity": "일반",
+    "description": "아름다운 선율로 적을 현혹하는 악기",
+    "price": 300,
+    "usable_classes": ["도사"]
+  },
+  {
+    "id": "xuanwu_geomungo",
+    "name": "현무 거문고",
+    "type": "비파",
+    "attack": 24,
+    "rarity": "희귀",
+    "description": "현무의 힘이 깃든 신령한 거문고",
+    "price": 800,
+    "usable_classes": ["도사"],
+    "special_effect": "MP 회복 +3/턴"
+  },
+  {
+    "id": "phantom_bipa",
+    "name": "환상 비파",
+    "type": "비파",
+    "attack": 32,
+    "rarity": "전설",
+    "description": "환상을 만들어내는 전설의 비파",
+    "price": 1800,
+    "usable_classes": ["도사"],
+    "special_effect": "적 회피율 -20%"
+  },
+  {
+    "id": "daegeom",
+    "name": "대검",
+    "type": "대검",
+    "attack": 28,
+    "rarity": "희귀",
+    "description": "두 손으로 휘두르는 무거운 검",
+    "price": 700,
+    "usable_classes": ["무사"]
+  },
+  {
+    "id": "royal_greatsword",
+    "name": "왕실 대검",
+    "type": "대검",
+    "attack": 40,
+    "rarity": "전설",
+    "description": "왕실에서만 사용하는 최고급 대검",
+    "price": 2000,
+    "usable_classes": ["무사"],
+    "special_effect": "크리티컬 확률 +15%"
+  },
+  {
+    "id": "chamdo",
+    "name": "참도",
+    "type": "도",
+    "attack": 20,
+    "rarity": "일반",
+    "description": "베기에 특화된 조선의 전통 도검",
+    "price": 180,
+    "usable_classes": ["무사", "유랑객"]
+  },
+  {
+    "id": "ghost_chamdo",
+    "name": "귀신 참도",
+    "type": "도",
+    "attack": 26,
+    "rarity": "희귀",
+    "description": "귀신도 벨 수 있다는 전설의 참도",
+    "price": 650,
+    "usable_classes": ["무사", "유랑객"],
+    "special_effect": "요괴에게 추가 피해 +30%"
+  }
+] 

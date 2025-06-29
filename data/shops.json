@@ -1,0 +1,144 @@
+{
+  "shop_001": {
+    "name": "한양 도사의 비전서",
+    "npc_name": "늙은 도사",
+    "region": "한양",
+    "items": {
+      "소형 약초": 5,
+      "대형 약초": 3,
+      "마력 물약": 4,
+      "회복 부적": 2
+    },
+    "weapons": [
+      "fire_talisman",
+      "frost_talisman",
+      "geomungo"
+    ]
+  },
+  "shop_002": {
+    "name": "한양 포졸서",
+    "npc_name": "한양 포졸",
+    "region": "한양",
+    "items": {
+      "소형 약초": 10,
+      "조개껍데기": 8
+    },
+    "weapons": [
+      "namugeom",
+      "cheolgeom",
+      "chamdo"
+    ]
+  },
+  "shop_003": {
+    "name": "초록 약초 가게",
+    "npc_name": "초록 약초상",
+    "region": "빛고을",
+    "items": {
+      "소형 약초": 15,
+      "대형 약초": 8,
+      "마력 물약": 6,
+      "고급 마력 물약": 3
+    },
+    "weapons": []
+  },
+  "shop_004": {
+    "name": "빛고을 구전 상점",
+    "npc_name": "빛고을 구전 상인",
+    "region": "빛고을",
+    "items": {
+      "신령한 구슬": 2,
+      "귀한 뼛조각": 5
+    },
+    "weapons": [
+      "joseon_do",
+      "hidden_blade"
+    ]
+  },
+  "shop_005": {
+    "name": "제물포 잡화점",
+    "npc_name": "제물포 잡화상",
+    "region": "제물포",
+    "items": {
+      "조개껍데기": 20,
+      "소형 약초": 12,
+      "마력 물약": 8
+    },
+    "weapons": [
+      "namugeom",
+      "cheolgeom",
+      "geomungo"
+    ]
+  },
+  "shop_006": {
+    "name": "서녘 대장간",
+    "npc_name": "서녘 무기장인",
+    "region": "한밭",
+    "items": {
+      "귀한 뼛조각": 10
+    },
+    "weapons": [
+      "cheolgeom",
+      "joseon_do",
+      "daegeom",
+      "chamdo",
+      "ghost_chamdo"
+    ]
+  },
+  "shop_007": {
+    "name": "아우내 떠돌이 장터",
+    "npc_name": "아우내 방랑객",
+    "region": "아우내",
+    "items": {
+      "소형 약초": 8,
+      "마력 물약": 5,
+      "조개껍데기": 15
+    },
+    "weapons": [
+      "hidden_blade",
+      "poison_blade",
+      "chamdo"
+    ]
+  },
+  "shop_008": {
+    "name": "화염 전문점",
+    "npc_name": "가마뫼 화염 상인",
+    "region": "가마뫼",
+    "items": {
+      "마력 물약": 6,
+      "고급 마력 물약": 4
+    },
+    "weapons": [
+      "fire_talisman",
+      "thunder_talisman"
+    ]
+  },
+  "shop_009": {
+    "name": "탐라국 유배자의 은밀한 거래",
+    "npc_name": "탐라국 유배자",
+    "region": "탐라국",
+    "items": {
+      "신령한 구슬": 3,
+      "귀한 뼛조각": 8,
+      "대형 약초": 5
+    },
+    "weapons": [
+      "dragon_sword",
+      "xuanwu_geomungo",
+      "royal_greatsword"
+    ]
+  },
+  "shop_010": {
+    "name": "뼈와 해골의 상점",
+    "npc_name": "소머리골 뼈상인",
+    "region": "소머리골",
+    "items": {
+      "귀한 뼛조각": 25,
+      "회복 부적": 5
+    },
+    "weapons": [
+      "ghost_chamdo",
+      "phantom_bipa"
+    ]
+  }
+}
+  

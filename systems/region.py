@@ -234,5 +234,53 @@ class RegionManager:
                 print(f"   위험도: {region_data['features']['위험도']}")
             print()
 
+    def interact_with_npcs(self):
+        """현재 지역의 NPC들과 상호작용할 수 있는 메뉴를 제공합니다."""
+        from systems.npc_system import NPCSystem
+        
+        npc_system = NPCSystem()
+        npcs = npc_system.get_npcs_in_region(self.current_region)
+        
+        if not npcs:
+            print(f"📭 {self.current_region}에는 만날 수 있는 사람이 없습니다.")
+            return
+        
+        print(f"\n🏘️ **{self.current_region}의 사람들**")
+        print("=" * 40)
+        
+        for i, npc in enumerate(npcs, 1):
+            shop_indicator = " 🏪" if npc.has_shop() else ""
+            print(f"{i}. {npc.name}{shop_indicator}")
+        print(f"{len(npcs) + 1}. 돌아가기")
+        print("=" * 40)
+        
+        while True:
+            try:
+                choice = input(f"\n만나고 싶은 사람을 선택하세요 (1-{len(npcs) + 1}): ").strip()
+                
+                if choice == str(len(npcs) + 1):
+                    break
+                
+                choice_num = int(choice)
+                if 1 <= choice_num <= len(npcs):
+                    selected_npc = npcs[choice_num - 1]
+                    print(npc_system.interact_with_npc(selected_npc))
+                    
+                    # 상점이 있는 경우 상점 이용 옵션 제공
+                    if selected_npc.has_shop():
+                        shop_choice = input("\n상점을 이용하시겠습니까? (y/n): ").strip().lower()
+                        if shop_choice == 'y':
+                            print("🚧 상점 시스템은 아직 구현되지 않았습니다.")
+                    
+                    input("\n계속하려면 Enter를 누르세요...")
+                else:
+                    print(f"⚠️ 1부터 {len(npcs) + 1} 사이의 숫자를 입력하세요.")
+                    
+            except ValueError:
+                print("⚠️ 올바른 숫자를 입력하세요.")
+            except KeyboardInterrupt:
+                print("\n👋 대화를 마칩니다.")
+                break
+
 # 전역 지역 관리자 인스턴스
 region_manager = RegionManager() 

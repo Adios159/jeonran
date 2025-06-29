@@ -1,0 +1,50 @@
+{
+  "소형 약초": {
+    "type": "healing",
+    "effect": 25,
+    "description": "작은 상처를 치료하는 흔한 약초",
+    "price": 50
+  },
+  "대형 약초": {
+    "type": "healing", 
+    "effect": 50,
+    "description": "깊은 상처도 치료할 수 있는 귀한 약초",
+    "price": 100
+  },
+  "마력 물약": {
+    "type": "mana",
+    "effect": 15,
+    "description": "마력을 회복시켜주는 신비한 물약",
+    "price": 75
+  },
+  "귀한 뼛조각": {
+    "type": "material",
+    "effect": 0,
+    "description": "요괴의 뼈에서 얻은 귀한 재료, 제작이나 거래에 사용됨",
+    "price": 200
+  },
+  "조개껍데기": {
+    "type": "material",
+    "effect": 0,
+    "description": "바다에서 건져 올린 특별한 조개껍데기",
+    "price": 30
+  },
+  "신령한 구슬": {
+    "type": "material",
+    "effect": 0,
+    "description": "신령한 기운이 깃든 신비로운 구슬",
+    "price": 500
+  },
+  "고급 마력 물약": {
+    "type": "mana",
+    "effect": 30,
+    "description": "순도 높은 마력을 회복시키는 최고급 물약",
+    "price": 150
+  },
+  "회복 부적": {
+    "type": "healing",
+    "effect": 35,
+    "description": "도사가 제작한 회복력이 깃든 부적",
+    "price": 120
+  }
+} 
