@@ -50,8 +50,7 @@ def start_battle(player, enemy):
 
         if not enemy.is_alive():
             print(f"{enemy.name}을(를) 쓰러뜨렸다")
-            print(f"경험치 {enemy.exp_reward} 획득!")
-            player.exp += enemy.exp_reward
+            player.gain_exp(enemy.exp_reward)
             return
 
         print("\n[적 턴]")

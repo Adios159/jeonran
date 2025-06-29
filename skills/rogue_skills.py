@@ -14,8 +14,8 @@ def poison_dagger(user, target):
 
 rogue_skills = [
     Skill(
-        name = "화염구",
-        description = "화상 상태이상을 줄 수 있는 마법",
+        name = "급소 찔러내기",
+        description = "적의 급소를 노려 높은 피해를 입힌다",
         mp_cost = 6,
         effect_func = quick_stab,
         ),

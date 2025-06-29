@@ -24,6 +24,21 @@ class BaseCharacter:
     def end_turn(self):
         to_remove = []
         for status in self.status_effects:
+            # 상태이상 효과 적용
+            if status == "burn":
+                damage = max(1, int(self.max_hp * 0.1))  # 최대 HP의 10%
+                self.current_hp = max(0, self.current_hp - damage)
+                print(f"{self.name}이(가) 화상으로 {damage}의 피해를 입었다!")
+            elif status == "poison":
+                damage = max(1, int(self.max_hp * 0.08))  # 최대 HP의 8%
+                self.current_hp = max(0, self.current_hp - damage)
+                print(f"{self.name}이(가) 독으로 {damage}의 피해를 입었다!")
+            elif status == "freeze":
+                print(f"{self.name}은(는) 빙결 상태로 행동할 수 없다!")
+            elif status == "stun":
+                print(f"{self.name}은(는) 기절 상태로 행동할 수 없다!")
+            
+            # 지속시간 감소
             self.status_effects[status] -= 1
             if self.status_effects[status] <= 0:
                 to_remove.append(status)
