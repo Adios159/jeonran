@@ -21,6 +21,10 @@ def main():
         job = "무사"
 
     player = Player(name, job)
+    
+    print(f"\n환영합니다, {name}님!")
+    print("모험을 시작하기 전 기본 아이템을 지급해드리겠습니다.")
+    player.give_starting_items()
 
     enemy = Enemy(
         name = "호롱불",

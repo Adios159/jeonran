@@ -2,6 +2,8 @@ from characters.base_character import BaseCharacter
 from skills.warrior_skills import warrior_skills
 from skills.mage_skills import mage_skills
 from skills.rogue_skills import rogue_skills
+from systems.inventory import Inventory
+from systems.item import basic_items
 
 class Player(BaseCharacter):
     def __init__(self, name, job):
@@ -46,6 +48,15 @@ class Player(BaseCharacter):
             self.skills = rogue_skills
         else:
             raise ValueError("없는 직업 입니다")
+        
+        # 인벤토리 초기화
+        self.inventory = Inventory()
+    
+    def give_starting_items(self):
+        """시작 아이템 지급"""
+        print("\n=== 시작 아이템 지급 ===")
+        self.inventory.add_item("소형 약초", 3)
+        self.inventory.add_item("마력 물약", 2)
     
     def end_turn(self):
         # 부모 클래스의 상태이상 처리
@@ -88,3 +99,19 @@ class Player(BaseCharacter):
             # MP 최대치도 증가
             max_mp = 30 + mp_increase * (self.level - 1)
             self.mp = min(self.mp + mp_increase, max_mp)
+    
+    def use_item(self, item_name):
+        """아이템 사용"""
+        if not self.inventory.has_item(item_name):
+            print(f"{item_name}이(가) 인벤토리에 없습니다.")
+            return False
+        
+        if item_name not in basic_items:
+            print(f"{item_name}은(는) 사용할 수 없는 아이템입니다.")
+            return False
+        
+        item = basic_items[item_name]
+        if item.use(self):  # 아이템 사용 성공
+            self.inventory.remove_item(item_name, 1)
+            return True
+        return False

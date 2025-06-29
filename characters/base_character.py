@@ -11,6 +11,11 @@ class BaseCharacter:
     def is_alive(self):
         return self.current_hp > 0
     
+    def can_act(self):
+        """행동 가능 여부 확인"""
+        # 빙결이나 기절 상태일 때 행동 불가
+        return not ("freeze" in self.status_effects or "stun" in self.status_effects)
+    
     def take_damage(self, amount):
         reduced = max(1, amount - self.defence)
         self.current_hp = max(0, self.current_hp - reduced)
