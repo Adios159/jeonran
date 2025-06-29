@@ -21,4 +21,5 @@ class Skill:
         if self.status_effect and random.random() < self.status_chance:
             target.apply_status(self.status_effect, 3)
             print(f"{target.name}이(가) {self.status_effect} 상태이상에 걸렸다")
-            return False
+            
+        return True  # 스킬 사용 성공

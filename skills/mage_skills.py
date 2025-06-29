@@ -1,16 +1,14 @@
 from skills.base_skill import Skill
 
 def fireball(user, target):
-    damage = int(user.attack * 1.2 + 10 - target.defence)
-    damage = max(1, int(damage))
-    target.current_hp -= damage
-    print(f"{target.name}에게 불덩이를 날려 {damage}의 피해를 입혔다")
+    """화염구 - 1.2배 피해 + 마법 추가 피해"""
+    damage = int(user.attack * 1.2 + 10)
+    target.take_damage(damage)
 
 def frost_wave(user, target):
-    damage = int(user.attack * 0.8 + 5 - target.defence)
-    damage = max(1, int(damage))
-    target.current_hp -= damage
-    print(f"{target.name}에게 냉기를 날려 {damage}의 피해를 입혔다")
+    """서리파동 - 0.8배 피해 + 마법 추가 피해"""
+    damage = int(user.attack * 0.8 + 5)
+    target.take_damage(damage)
 
 mage_skills = [
     Skill(

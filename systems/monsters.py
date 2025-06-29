@@ -229,7 +229,7 @@ class MonsterFactory:
             
             def escape_action(target):
                 if random.random() < traits["escape_chance"]:
-                    print(f"{monster.name}이(가) 빠르게 도망쳤다!")
+                    print(f"{getattr(monster, 'display_name', monster.name)}이(가) 빠르게 도망쳤다!")
                     monster.current_hp = 0  # 도망 = 전투 종료
                     return
                 original_choose_action(target)
@@ -265,11 +265,16 @@ class MonsterSpawner:
         return region_map
     
     def get_random_monster(self, region_name):
-        """해당 지역에서 랜덤 몬스터 스폰"""
+        """단일 몬스터 스폰 (기존 호환성용)"""
+        monsters = self.get_random_monsters(region_name)
+        return monsters[0] if monsters else None
+    
+    def get_random_monsters(self, region_name):
+        """해당 지역에서 1-3마리 랜덤 몬스터 스폰"""
         if region_name not in self.region_monsters:
             # 기본 몬스터 (호롱불) 반환
             from characters.enemy import Enemy
-            return Enemy(
+            default_monster = Enemy(
                 name="호롱불",
                 max_hp=50,
                 attack=10,
@@ -278,18 +283,66 @@ class MonsterSpawner:
                 exp_reward=30,
                 status_chance={"burn": 0.4}
             )
+            default_monster.description = "신비로운 불꽃 요괴"
+            return [default_monster]
         
         available_monsters = self.region_monsters[region_name]
-        monster_name = random.choice(available_monsters)
         
-        # 무리 스폰 체크
-        data = monster_data[monster_name]
-        if data["special_traits"].get("pack_spawn"):
-            pack_chance = data["special_traits"].get("pack_chance", 0)
-            if random.random() < pack_chance:
-                print(f"여러 마리의 {monster_name}이(가) 무리지어 나타났다!")
+        # 다중 스폰 확률 계산
+        spawn_count = self._determine_spawn_count(region_name, available_monsters)
         
-        return MonsterFactory.create_monster(monster_name)
+        spawned_monsters = []
+        for i in range(spawn_count):
+            monster_name = random.choice(available_monsters)
+            monster = MonsterFactory.create_monster(monster_name)
+            
+            # 같은 종류 몬스터가 여러 마리일 경우 번호 추가
+            if spawn_count > 1:
+                same_type_count = sum(1 for m in spawned_monsters if m.name == monster.name)
+                if same_type_count > 0:
+                    monster.display_name = f"{monster.name} #{same_type_count + 1}"
+                else:
+                    monster.display_name = f"{monster.name} #1"
+            else:
+                monster.display_name = monster.name
+            
+            spawned_monsters.append(monster)
+        
+        return spawned_monsters
+    
+    def _determine_spawn_count(self, region_name, available_monsters):
+        """스폰할 몬스터 수 결정"""
+        # 지역별 위험도에 따른 다중 스폰 확률
+        from systems.region import regions
+        
+        region_data = regions.get(region_name, {})
+        danger_level = region_data.get("features", {}).get("위험도", "안전")
+        
+        # 위험도별 다중 스폰 확률 설정
+        if danger_level == "극도로높음":
+            # 70% 확률로 2-3마리
+            weights = [30, 50, 20]  # 1마리, 2마리, 3마리
+        elif danger_level == "매우높음":
+            # 50% 확률로 2-3마리
+            weights = [50, 40, 10]
+        elif danger_level == "높음":
+            # 30% 확률로 2마리
+            weights = [70, 30, 0]
+        else:
+            # 안전/낮음 지역은 대부분 1마리
+            weights = [85, 15, 0]
+        
+        # 특정 몬스터의 무리 사냥 특성 확인
+        pack_monsters = [name for name in available_monsters 
+                        if monster_data[name]["special_traits"].get("pack_spawn")]
+        
+        # 무리 사냥 몬스터가 있으면 다중 스폰 확률 증가
+        if pack_monsters and random.choice(available_monsters) in pack_monsters:
+            if random.random() < monster_data[random.choice(pack_monsters)]["special_traits"].get("pack_chance", 0.4):
+                weights = [10, 60, 30]  # 무리 사냥 시 2-3마리 높은 확률
+        
+        # 가중치 기반 선택
+        return random.choices([1, 2, 3], weights=weights)[0]
     
     def get_monsters_in_region(self, region_name):
         """해당 지역의 모든 몬스터 목록 반환"""

@@ -19,7 +19,7 @@ class BaseCharacter:
     def take_damage(self, amount):
         reduced = max(1, amount - self.defence)
         self.current_hp = max(0, self.current_hp - reduced)
-        print(f"{self.name}이(가) {reduced}의 패히를 입었다! (남은 HP:{self.current_hp})")
+        print(f"{self.name}이(가) {reduced}의 피해를 입었다! (남은 HP:{self.current_hp})")
 
     def apply_status(self, status, duration):
         if status not in self.status_effects:
