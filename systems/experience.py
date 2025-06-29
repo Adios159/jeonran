@@ -28,12 +28,29 @@ class ExperienceSystem:
         self._precompute_total_exp()
     
     def _precompute_total_exp(self):
-        """레벨별 총 누적 경험치를 미리 계산하여 캐시에 저장"""
-        total = 0
+        """레벨별 총 누적 경험치를 미리 계산하여 캐시에 저장 (벡터화된 계산)"""
+        # 더 효율적인 벡터화된 계산
+        import numpy as np
+        
+        # 1~49 레벨 계산
+        levels_1_49 = np.arange(2, 51)
+        exp_1_49 = self.BASE_EXP * (self.GROWTH1 ** (levels_1_49 - 2))
+        
+        # 50~99 레벨 계산
+        levels_50_99 = np.arange(50, 100)
+        exp_50_99 = self.exp_49 * (self.GROWTH2 ** (levels_50_99 - 50))
+        
+        # 100~150 레벨 계산
+        levels_100_150 = np.arange(100, self.MAX_LEVEL + 1)
+        exp_100_150 = self.exp_99 + self.K * np.log(levels_100_150 - 99)
+        
+        # 누적 합계 계산
+        all_exp = np.concatenate([[0], exp_1_49, exp_50_99, exp_100_150])
+        cumulative_exp = np.cumsum(all_exp)
+        
+        # 캐시에 저장
         for level in range(1, self.MAX_LEVEL + 1):
-            if level > 1:
-                total += self.exp_needed_for_level(level)
-            self._total_exp_cache[level] = total
+            self._total_exp_cache[level] = int(cumulative_exp[level - 1]) if level > 1 else 0
     
     def exp_needed_for_level(self, level: int) -> int:
         """

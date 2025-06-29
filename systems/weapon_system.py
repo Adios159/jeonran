@@ -50,12 +50,12 @@ class Weapon:
         }
         return colors.get(self.rarity, "⚪")
     
-    def get_info(self, player_class: str = None) -> str:
+    def get_info(self, player_class: Optional[str] = None) -> str:
         """무기 정보를 상세히 반환합니다."""
         info = f"{self.get_rarity_color()} **{self.name}** ({self.type})\n"
         
         # 공격력 표시 (직업별 보정 적용)
-        if player_class:
+        if player_class is not None:
             try:
                 effective_attack = self.get_effective_attack(player_class)
                 if effective_attack != self.attack:
@@ -159,7 +159,7 @@ class WeaponSystem:
         
         return results
     
-    def show_weapon_catalog(self, player_class: str = None):
+    def show_weapon_catalog(self, player_class: Optional[str] = None):
         """무기 도감을 표시합니다."""
         print("\n⚔️ **무기 도감**")
         print("=" * 50)
@@ -171,13 +171,13 @@ class WeaponSystem:
             
             for weapon in sorted(weapons, key=lambda w: w.price):
                 # 직업 제한 확인
-                if player_class and not weapon.can_be_used_by(player_class):
+                if player_class is not None and not weapon.can_be_used_by(player_class):
                     continue
                 
                 print(f"  {weapon.get_rarity_color()} {weapon.name}")
                 print(f"    공격력: {weapon.attack} | 가격: {weapon.price}전")
                 
-                if player_class:
+                if player_class is not None:
                     try:
                         effective_attack = weapon.get_effective_attack(player_class)
                         if effective_attack != weapon.attack:
