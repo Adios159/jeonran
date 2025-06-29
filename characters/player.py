@@ -5,9 +5,23 @@ from skills.rogue_skills import rogue_skills
 from systems.inventory import Inventory
 from systems.item import basic_items
 from systems.weapon_system import WeaponSystem, Weapon
-from typing import Optional
+from systems.quest_system import Quest, quest_system
+from typing import Optional, Dict, List, Any
 
 class Player(BaseCharacter):
+    # --- Static attribute declarations for type checkers ---
+    level: int
+    exp: int
+    mp: int
+    max_mp: int
+    current_location: str
+    gold: int
+    inventory: 'Inventory'
+    weapon_system: 'WeaponSystem'
+    equipped_weapon: Optional['Weapon']
+    active_quests: Dict[str, Dict[str, Any]]
+    completed_quests: List[str]
+
     def __init__(self, name, job):
         self.job = job
 
@@ -17,6 +31,7 @@ class Player(BaseCharacter):
             defence = 15
             speed = 8
             skills = ["가르기"]
+            max_mp = 20
 
         elif job == "도사":
             max_hp = 80
@@ -24,6 +39,7 @@ class Player(BaseCharacter):
             defence = 8
             speed = 10
             skills = ["화염부"]
+            max_mp = 40
 
         elif job == "유랑객":
             max_hp = 90
@@ -31,6 +47,7 @@ class Player(BaseCharacter):
             defence = 10
             speed = 18
             skills = ["급소찌르기"]
+            max_mp = 30
 
         else:
             raise ValueError("없는 직업 입니다.")
@@ -39,8 +56,10 @@ class Player(BaseCharacter):
 
         self.level = 1
         self.exp = 0
-        self.mp = 30
+        self.mp = max_mp  # 초기 MP는 최대 MP로 설정
+        self.max_mp = max_mp  # 최대 MP 속성 추가
         self.current_location = "한양"  # 기본 시작 위치
+        self.gold = 0  # 초기 소지금
 
         # 직업별 스킬 할당
         if job == "무사":
@@ -59,6 +78,42 @@ class Player(BaseCharacter):
         self.weapon_system = WeaponSystem()
         self.equipped_weapon = None  # 현재 장착한 무기
         self.base_attack = attack    # 기본 공격력 저장 (무기 없을 때)
+
+        # 퀘스트 관련 초기화
+        self.active_quests = {}
+        self.completed_quests = []
+    
+    # 속성 별칭 제공 (type checker용)
+    @property
+    def hp(self):
+        return self.current_hp
+
+    @hp.setter
+    def hp(self, value):
+        self.current_hp = value
+
+    @property
+    def defense(self):
+        return self.defence
+
+    @property
+    def location(self):
+        return self.current_location
+    
+    @location.setter
+    def location(self, value):
+        self.current_location = value
+
+    def get_effective_attack(self) -> int:
+        """현재 장비와 보정을 반영한 실제 공격력 반환"""
+        return self.attack
+
+    def show_exp_progress(self):
+        """경험치 진행 상황을 간단히 출력합니다."""
+        progress = int((self.exp / (self.level * 100)) * 20)
+        bar = "■" * progress + "□" * (20 - progress)
+        pct = (self.exp / (self.level * 100)) * 100
+        print(f"EXP [{bar}] {pct:.1f}%")
     
     def give_starting_items(self):
         """시작 아이템 지급"""
@@ -70,12 +125,12 @@ class Player(BaseCharacter):
         # 부모 클래스의 상태이상 처리
         super().end_turn()
         
-        # MP 회복 (턴당 2 회복, 최대치 초과 불가)
-        max_mp = 30 + 5 * (self.level - 1)  # 레벨당 MP 5 증가
+        # 레벨에 따른 최대 MP 업데이트
+        self.max_mp = 30 + 5 * (self.level - 1)
         old_mp = self.mp
-        self.mp = min(self.mp + 2, max_mp)
+        self.mp = min(self.mp + 2, self.max_mp)
         if self.mp > old_mp:
-            print(f"{self.name}의 마력이 {self.mp - old_mp}만큼 회복되었다 (MP: {self.mp}/{max_mp})")
+            print(f"{self.name}의 마력이 {self.mp - old_mp}만큼 회복되었다 (MP: {self.mp}/{self.max_mp})")
     
     def gain_exp(self, amount):
         """경험치 획득 및 레벨업 처리"""
@@ -106,8 +161,8 @@ class Player(BaseCharacter):
             print(f"최대 MP +{mp_increase} (현재: 30 + {mp_increase * (self.level-1)})")
             
             # MP 최대치도 증가
-            max_mp = 30 + mp_increase * (self.level - 1)
-            self.mp = min(self.mp + mp_increase, max_mp)
+            self.max_mp = 30 + mp_increase * (self.level - 1)
+            self.mp = min(self.mp + mp_increase, self.max_mp)
     
     def use_item(self, item_name):
         """아이템 사용"""
@@ -232,3 +287,46 @@ class Player(BaseCharacter):
         # 인벤토리에 무기 추가 (향후 구현)
         print(f"✅ {weapon.name}을(를) 구매했습니다!")
         return True
+
+    def accept_quest(self, quest_id: str) -> bool:
+        """퀘스트를 수락합니다."""
+        if quest_id in self.active_quests or quest_id in self.completed_quests:
+            print("이미 수락했거나 완료한 퀘스트입니다.")
+            return False
+        
+        quest = quest_system.get_quest(quest_id)
+        if not quest:
+            print("존재하지 않는 퀘스트입니다.")
+            return False
+            
+        self.active_quests[quest_id] = {"progress": {}} # 진행상황 초기화
+        print(f"\n[퀘스트 수락] {quest.title}")
+        print(quest.get_details())
+        return True
+
+    def show_quest_log(self):
+        """퀘스트 로그를 표시합니다."""
+        print("\n" + "="*50)
+        print("📖 퀘스트 로그")
+        print("="*50)
+
+        if not self.active_quests:
+            print("\n진행 중인 퀘스트가 없습니다.")
+        else:
+            print("\n--- 진행 중인 퀘스트 ---")
+            for quest_id in self.active_quests:
+                quest = quest_system.get_quest(quest_id)
+                if quest:
+                    print(f"\n{quest.get_summary()}")
+                    # 여기에 상세 진행상황을 표시할 수 있습니다.
+        
+        if not self.completed_quests:
+            print("\n완료한 퀘스트가 없습니다.")
+        else:
+            print("\n--- 완료한 퀘스트 ---")
+            for quest_id in self.completed_quests:
+                quest = quest_system.get_quest(quest_id)
+                if quest:
+                    print(f"  - {quest.title} (완료)")
+        
+        print("\n" + "="*50)

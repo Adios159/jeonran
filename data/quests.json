@@ -114,5 +114,92 @@
       "completed_quests": ["quest_001"]
     },
     "status": "available"
+  },
+  {
+    "id": "tamna_fog",
+    "title": "불길한 안개 속으로",
+    "giver": "탐라국 선비",
+    "region": "탐라국",
+    "description": "밤이 되면 탐라국에 불길한 안개가 낍니다. 안개 속에서 출몰하는 요괴를 처치하여 원인을 규명해주십시오.",
+    "condition": {
+      "type": "kill", 
+      "target_type": "midboss", 
+      "count": 1, 
+      "details": {"location": "탐라국", "time": "night"}
+    },
+    "reward": {
+      "items": [{"id": "talisman_resistance", "name": "상태이상 저항 부적", "count": 1}],
+      "exp": 500
+    },
+    "tags": ["상태이상", "지역 조사", "밤 전용"]
+  },
+  {
+    "id": "cursed_seed",
+    "title": "검은 씨앗의 저주",
+    "giver": "가마뫼 약초상",
+    "region": "가마뫼",
+    "description": "요괴에게서 검은 씨앗을 구해주게. 독이나 어둠에 물든 채로 요괴를 처치해야만 얻을 수 있다네.",
+    "condition": {
+      "type": "collect", 
+      "item_name": "저주의 씨앗", 
+      "count": 3
+    },
+    "reward": {
+      "items": [{"id": "super_antidote", "name": "고급 해독약", "count": 1}],
+      "gold": 20
+    },
+    "tags": ["상태이상", "수집", "아이템 연동"]
+  },
+  {
+    "id": "paralyzed_sword",
+    "title": "잠자는 무사의 검",
+    "giver": "한양 대장장이",
+    "region": "한양",
+    "description": "마비된 적을 처치하면 특별한 기운을 얻을 수 있다 들었네. 그 기운을 모아 새로운 무기를 만들어보세.",
+    "condition": {
+      "type": "kill_with_status", 
+      "status": "마비", 
+      "count": 3
+    },
+    "reward": {
+      "items": [{"id": "paralysis_dagger", "name": "마비의 단도", "count": 1}],
+      "exp": 0
+    },
+    "tags": ["무기", "상태이상 활용", "조건 전투"]
+  },
+  {
+    "id": "forgotten_record",
+    "title": "잊혀진 동료의 기록",
+    "giver": "빛고을 방랑객",
+    "region": "빛고을",
+    "description": "내 동료의 흔적을 찾아주게. 망령 사서라는 요괴가 그의 기록을 가지고 있을지도 모르네.",
+    "condition": {
+      "type": "collect", 
+      "item_name": "기록된 편지", 
+      "count": 1, 
+      "source": "망령 사서"
+    },
+    "reward": {
+      "exp": 1000,
+      "items": [{"id": "story_item_01", "name": "오래된 동료의 징표", "count": 1}]
+    },
+    "tags": ["스토리 연계", "지정 몬스터", "아이템 드랍"]
+  },
+  {
+    "id": "monster_codex_1",
+    "title": "요괴연감 만들기 – 1권",
+    "giver": "소머리골 서생",
+    "region": "소머리골",
+    "description": "이 지역의 요괴들을 연구하고 있네. 다음 요괴들을 한 마리씩만 처치하고 기록을 가져다주게나. (목록: 도깨비불, 목각귀, 장산범, 어둑시니, 그슨대)",
+    "condition": {
+      "type": "kill_list",
+      "targets": ["도깨비불", "목각귀", "장산범", "어둑시니", "그슨대"],
+      "count": 1
+    },
+    "reward": {
+      "exp": 300, 
+      "features": ["unlock_codex"]
+    },
+    "tags": ["도감", "수집형 퀘스트", "반복 가능성 있음"]
   }
 ] 

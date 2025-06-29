@@ -2,6 +2,15 @@ import json
 import os
 from datetime import datetime
 
+__all__ = [
+    "get_save_slots",
+    "show_save_slots",
+    "save_game",
+    "load_game",
+    "delete_save",
+    "SaveSystem",
+]
+
 
 def get_save_slots():
     """
@@ -206,4 +215,12 @@ def delete_save():
             return
         except Exception as e:
             print(f"❗ 파일을 삭제하는 중 오류가 발생했습니다: {e}")
-            return 
+            return
+
+
+class SaveSystem:
+    """래퍼 클래스 - 기존 save_game / load_game 함수를 객체 지향적으로 감싸줍니다."""
+    def save_game(self, player):
+        return save_game(player)
+    def load_game(self):
+        return load_game() 

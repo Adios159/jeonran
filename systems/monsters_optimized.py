@@ -2,6 +2,14 @@
 조선시대 설화 기반 RPG - 최적화된 몬스터 시스템
 JSON 데이터 기반, 메모리 효율적인 몬스터 관리
 """
+
+__all__ = [
+    "get_random_monsters",
+    "get_monsters_in_region",
+    "get_region_monster_info",
+    "show_monster_catalog",
+]
+
 import random
 from typing import List, Dict, Optional, Tuple
 from systems.data_manager import get_data
@@ -179,4 +187,19 @@ def get_monsters_in_region(region_name: str) -> List[str]:
 
 def get_region_monster_info(region_name: str) -> Dict:
     """편의 함수: 지역 몬스터 정보"""
-    return optimized_monster_spawner.get_region_monster_info(region_name) 
+    return optimized_monster_spawner.get_region_monster_info(region_name)
+
+
+def show_monster_catalog():
+    """모든 지역의 몬스터 목록을 간단히 출력합니다."""
+    from systems.region import regions
+    print("\n👹 요괴 도감")
+    print("="*40)
+    for region_name in regions.keys():
+        monsters = get_monsters_in_region(region_name)
+        if not monsters:
+            continue
+        print(f"\n📍 {region_name}")
+        print("-"*30)
+        for m in monsters:
+            print(f"  • {m}") 

@@ -3,6 +3,14 @@
 각 지역은 고유한 특성, 연결된 지역, 특수 기능을 가집니다.
 """
 
+__all__ = [
+    "region_manager",
+    "handle_region_travel",
+    "show_region_detailed_info",
+]
+
+from typing import Optional
+
 # 지역 정보 딕셔너리
 regions = {
     "한양": {
@@ -283,4 +291,39 @@ class RegionManager:
                 break
 
 # 전역 지역 관리자 인스턴스
-region_manager = RegionManager() 
+region_manager = RegionManager()
+
+def handle_region_travel(player):
+    """간단한 지역 이동 인터페이스 (메뉴 기반). 성공 시 True 반환"""
+    destinations = region_manager.get_available_destinations()
+    if not destinations:
+        print("이동할 수 있는 지역이 없습니다.")
+        return False
+
+    print("\n🚶 지역 이동")
+    print("="*30)
+    for i, dest in enumerate(destinations, 1):
+        print(f"{i}. {dest}")
+    print("0. 취소")
+
+    while True:
+        choice = input("\n어디로 이동하시겠습니까? ").strip()
+        if choice == "0":
+            return False
+        try:
+            idx = int(choice) - 1
+            if 0 <= idx < len(destinations):
+                dest_name = destinations[idx]
+                success, msg = region_manager.travel_to(dest_name)
+                print(msg)
+                return success
+            else:
+                print("올바른 번호를 입력해주세요.")
+        except ValueError:
+            print("숫자를 입력해주세요.")
+
+
+def show_region_detailed_info(region_name: Optional[str] = None):
+    """현재 지역 또는 지정 지역의 상세 정보를 출력합니다."""
+    info = region_manager.get_region_info(region_name)
+    print("\n" + info) 

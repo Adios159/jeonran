@@ -150,6 +150,8 @@ class GameStateManager:
                 elif choice == "8":
                     self.rest_at_location()
                 elif choice == "9":
+                    self.show_quest_log()
+                elif choice == "10":
                     self.game_exit_menu()
                     break
                 else:
@@ -196,7 +198,8 @@ class GameStateManager:
             "6. 지역 정보 보기",
             "7. 요괴 도감",
             "8. 휴식 (HP/MP 회복)",
-            "9. 게임 종료",
+            "9. 퀘스트 로그",
+            "10. 게임 종료",
             "="*50
         ]
         return "\n".join(content)
@@ -362,8 +365,13 @@ class GameStateManager:
         print(f"💰 소지금: {self.player.gold}전")
         print(f"📍 현재 위치: {region_manager.current_region}")
         
+        # 상태이상 표시
+        print("\n=== 상태 ===")
+        print(self.player.get_status_effects_info())
+        
         # 경험치 표시
         if hasattr(self.player, 'show_exp_progress'):
+            print("\n=== 경험치 ===")
             self.player.show_exp_progress()
             
         input("\n계속하려면 엔터를 누르세요...")
@@ -466,6 +474,12 @@ class GameStateManager:
             self.player = None
             self.clear_caches()
             self.show_main_menu()
+    
+    def show_quest_log(self):
+        """퀘스트 로그 표시"""
+        if self.player:
+            self.player.show_quest_log()
+            input("\n계속하려면 엔터를 누르세요...")
 
 
 def main():

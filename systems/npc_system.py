@@ -4,9 +4,15 @@
 설명: NPC 관리 및 상호작용 시스템
 """
 
+__all__ = [
+    "NPCSystem",
+    "handle_npc_interaction",
+]
+
 import json
 import os
 from typing import List, Dict, Optional
+from systems.quest_system import quest_system
 
 
 class NPC:
@@ -19,6 +25,7 @@ class NPC:
         self.dialogue: str = npc_data.get("dialogue", "...")
         self.type: str = npc_data.get("type", "일반")
         self.shop_id: Optional[str] = npc_data.get("shop_id")
+        self.has_quest = "quest_giver" in npc_data.get("tags", [])
         
     def speak(self) -> str:
         """NPC의 대사를 반환합니다."""
@@ -79,7 +86,7 @@ class NPCSystem:
         """특정 NPC를 ID로 조회합니다."""
         return self.npcs.get(npc_id)
     
-    def get_npc_by_name(self, name: str, region: str = None) -> Optional[NPC]:
+    def get_npc_by_name(self, name: str, region: Optional[str] = None) -> Optional[NPC]:
         """이름으로 NPC를 조회합니다. 지역을 지정하면 해당 지역에서만 검색합니다."""
         search_npcs = []
         
@@ -105,7 +112,8 @@ class NPCSystem:
         print("=" * 40)
         
         for i, npc in enumerate(npcs, 1):
-            print(f"{i}. {npc.get_info()}")
+            quest_marker = " ❔" if npc.has_quest else ""
+            print(f"{i}. {npc.name}{quest_marker}")
         
         print("=" * 40)
         return True
@@ -233,6 +241,59 @@ def test_npc_system():
         print(f"  • {npc.name} ({npc.region}): {npc.dialogue}")
     
     print("\n✅ NPC 시스템 테스트 완료!")
+
+
+def handle_npc_interaction(player):
+    """현재 지역의 NPC와 상호작용하는 간단한 래퍼 함수."""
+    from systems.region import region_manager
+    npc_system = NPCSystem()
+    
+    # NPC 선택 UI 개선
+    npcs_in_region = npc_system.get_npcs_in_region(region_manager.current_region)
+    if not npcs_in_region:
+        print(f"📭 {region_manager.current_region}에는 만날 수 있는 사람이 없습니다.")
+        return False
+
+    print(f"\n🏘️ **{region_manager.current_region}의 사람들**")
+    for i, npc in enumerate(npcs_in_region, 1):
+        quest_marker = " ❔" if npc.has_quest else ""
+        print(f"{i}. {npc.name}{quest_marker}")
+    print("0. 돌아가기")
+
+    try:
+        choice = int(input("\n선택> "))
+        if choice == 0:
+            return False
+        selected_npc = npcs_in_region[choice - 1]
+    except (ValueError, IndexError):
+        print("올바른 번호를 입력해주세요.")
+        return False
+
+    # NPC와 상호작용
+    print(npc_system.interact_with_npc(selected_npc))
+
+    # 퀘스트 처리
+    available_quests = [
+        q for q in quest_system.get_quests_for_giver(selected_npc.name)
+        if q.id not in player.active_quests and q.id not in player.completed_quests
+    ]
+
+    if available_quests:
+        print("\n--- 의뢰 가능 목록 ---")
+        for i, quest in enumerate(available_quests, 1):
+            print(f"{i}. {quest.title}")
+        print("0. 거절하기")
+
+        try:
+            quest_choice = int(input("\n수락할 의뢰를 선택하세요: "))
+            if quest_choice > 0:
+                selected_quest = available_quests[quest_choice - 1]
+                player.accept_quest(selected_quest.id)
+        except (ValueError, IndexError):
+            pass # 잘못된 입력은 무시
+
+    input("\n계속하려면 엔터를 누르세요...")
+    return True
 
 
 if __name__ == "__main__":

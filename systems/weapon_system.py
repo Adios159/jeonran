@@ -4,6 +4,12 @@
 설명: 무기 시스템 및 장착 관리
 """
 
+__all__ = [
+    "Weapon",
+    "WeaponSystem",
+    "equipment_management_menu",
+]
+
 import json
 import os
 from typing import List, Dict, Optional
@@ -276,6 +282,50 @@ def test_weapon_system():
         print(f"  도사 사용 시: {talisman.get_effective_attack('도사')}")
     
     print("\n✅ 무기 시스템 테스트 완료!")
+
+
+def equipment_management_menu(player):
+    """플레이어의 무기 장착/해제 및 카탈로그 확인을 위한 간단한 메뉴."""
+    weapon_system = player.weapon_system
+    while True:
+        print("\n⚔️ 장비 관리")
+        print("="*40)
+        print("1. 현재 장비 확인")
+        print("2. 무기 장착")
+        print("3. 무기 해제")
+        print("4. 무기 카탈로그 보기")
+        print("0. 돌아가기")
+        choice = input("\n선택> ").strip()
+        if choice == "0":
+            break
+        elif choice == "1":
+            player.show_equipment_status()
+        elif choice == "2":
+            usable = weapon_system.get_usable_weapons(player.job)
+            if not usable:
+                print(f"{player.job}이(가) 사용할 수 있는 무기가 없습니다.")
+                continue
+            print("\n장착 가능한 무기 목록:")
+            for i, weapon in enumerate(usable, 1):
+                print(f"{i}. {weapon.name} (공격력 {weapon.attack}, 가격 {weapon.price}전)")
+            print("0. 취소")
+            sel = input("\n장착할 무기를 선택하세요: ").strip()
+            if sel == "0":
+                continue
+            try:
+                idx = int(sel) - 1
+                if 0 <= idx < len(usable):
+                    player.equip_weapon(usable[idx])
+                else:
+                    print("올바른 번호를 입력하세요.")
+            except ValueError:
+                print("숫자를 입력하세요.")
+        elif choice == "3":
+            player.unequip_weapon()
+        elif choice == "4":
+            weapon_system.show_weapon_catalog(player.job)
+        else:
+            print("올바른 번호를 입력하세요.")
 
 
 if __name__ == "__main__":
